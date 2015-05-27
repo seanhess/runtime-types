@@ -172,9 +172,9 @@ export function validateTypeOf(type:string):Validator {
   }
 }
 
-export function validateInstanceOf(type:any):Validator {
+export function validateInstanceOf(func:Function):Validator {
   return function(val) {
-    return (val instanceof type) || "expected instance of " + type
+    return (val instanceof func) || "expected instance of " + func.name
   }
 }
 
