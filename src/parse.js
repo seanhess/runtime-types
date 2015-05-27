@@ -2,41 +2,21 @@
 // https://github.com/estree/estree/blob/master/spec.md
 
 var esprima = require('esprima-fb')
-
 var path = require('path')
 var lodash = require('lodash')
 var {assign, curry} = lodash
 var fs = require('fs')
 
+import {Type, Property, ObjectMap} from './types'
+
 
 //////////////////////////////////////////////////////////////
 // fileTypes 
 
-export type Property = {
-  key: string;
-  type: Type;
-  optional?: boolean;
-}
-
-export type Type = {
-  name: string; // number, string, boolean, Post, User, Array
-
-  literal?: string; // for string literals
-
-  nullable?: boolean;
-
-  // only filled for object types
-  properties?: Array<Property>;
-
-  // only filled for generics, like Array<XX>
-  params?: Array<Type>;
-}
-
-export type ObjectMap<T> = {[key: string]: T}
 
 // Synchronous. Designed to be called at program load on a particular file
 // or set of files
-export function fileTypes(filepath:string):ObjectMap<Type> {
+export function readFile(filepath:string):ObjectMap<Type> {
   return findTypes(parseFile(filepath))
 }
 

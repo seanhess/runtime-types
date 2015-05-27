@@ -1,5 +1,8 @@
 // @flow
-import {Type, Property} from './parse'
+
+// TODO FEATURE support nested objects
+
+import {Type, Property, ObjectMap} from './types'
 import {flatten, extend, constant, find} from 'lodash'
 
 export type Validator<T> = (value:T) => ValidationResult
@@ -10,26 +13,36 @@ export type ValidationResult = boolean | ValidationError;
 
 export type ValidatorMap = {[key:string]:Validator}
 
+export type ValidateObject = (value:Object) => Array<KeyedError>
+
 export type KeyedError = {
   key: string;
+  value: string;
   error: ValidationError;
 }
 
 type KeyedValidator = [string, Validator];
 
-//export type Property = {
-  //key: string;
-  //type: Type;
-  //optional?: boolean;
-//}
 
-//export type Type = {
-  //name: string; // number, string, boolean, Post, User, Array
-  //literal?: string; // for string literals
-  //nullable?: boolean;
-  //properties?: Array<Property>;
-  //params?: Array<Type>;
-//}
+// -------------------------------------------------------------
+
+export function create(map:ValidatorMap, type:Type):ValidateObject {
+  var vs = typeValidators(map, type)
+  return function(obj) {
+    return validateAll(vs, obj)
+  }
+}
+
+export function createAll(map:ValidatorMap, types:ObjectMap<Type>):ObjectMap<ValidateObject> {
+  var vs = {}
+  for (var name in types) {
+    vs[name] = create(map, types[name])
+  }
+  return vs
+}
+
+
+// ---------------------------------------------------------------
 
 var VALIDATORS_BY_TYPE:ValidatorMap = {
   "string"  : validateTypeOf("string"),
@@ -38,7 +51,7 @@ var VALIDATORS_BY_TYPE:ValidatorMap = {
   "Date"    : validateInstanceOf(Date),
 }
 
-export function validateAll(vs:Array<KeyedValidator>, obj:Object):Array<KeyedError> {
+function validateAll(vs:Array<KeyedValidator>, obj:Object):Array<KeyedError> {
   var maybeErrs:Array<?KeyedError> = vs.map(function(kv) {
     return validate(kv, obj)
   })
@@ -50,41 +63,17 @@ export function validateAll(vs:Array<KeyedValidator>, obj:Object):Array<KeyedErr
   return errs
 }
 
-export function validate([key, validator]:KeyedValidator, obj:Object):?KeyedError {
+function validate([key, validator]:KeyedValidator, obj:Object):?KeyedError {
   // this runs the validator
   var result = validator(obj[key])
   if (!valid(result)) {
-    return {key: key, error: (result : any)}
+    return {key: key, value: obj[key], error: (result : any)}
   }
 }
 
-export function valid(result:ValidationResult):boolean {
+function valid(result:ValidationResult):boolean {
   return result === true
 }
-
-
-//export function combine(vs:Array<Validator>):Validator {
-  //// return a function that evaluates all of them
-  //return function(val) {
-    //// run all of them, and return the message for the first one that fails
-    //var failed = vs.map(function(validator) {
-      //return validator(val) !== true
-    //})
-
-    //if (failed) {
-      //return {
-        //valid: false,
-        //message: failed.message
-      //}
-    //}
-
-    //else {
-      //return {
-        //valid: true
-      //}
-    //}
-  //}
-//}
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -127,17 +116,16 @@ function typeToValidator(map:ValidatorMap, key:string, type:Type):KeyedValidator
   return [key, isValid]
 }
 
-export function validators(map:ValidatorMap, type:Type):Array<KeyedValidator> {
+function typeValidators(map:ValidatorMap, type:Type):Array<KeyedValidator> {
   var fullMap:ValidatorMap = extend(map, VALIDATORS_BY_TYPE)
   if (type.properties) {
     return objToValidators(fullMap, type.properties)
   }
 
   else {
-    throw new Error("Meant to be called with an object type")
+    return [typeToValidator(map, "", type)]
   }
 }
-
 
 function objToValidators(map:ValidatorMap, props:Array<Property>):Array<KeyedValidator> {
   return props.map(function(prop) {
@@ -145,27 +133,10 @@ function objToValidators(map:ValidatorMap, props:Array<Property>):Array<KeyedVal
   })
 }
 
-// I need a way to compose validators...
-// all   -> runs all validators
-// first -> runs them in order, stopping after the first
-
 //////////////////////////////////////////////////////////////
 // Validators
 //////////////////////////////////////////////////////////////
 
-// how can I allow them to map it themselves?
-// they can specify their own mapping function? and call mine...
-
-// can I make validators simpler? 
-// right now they need the key
-// but ... can I just add the key on later?
-// like, a validator doesn't have to add the key stuff.
-// it's the same in every single one!
-
-// RULES: should leverage a simple boolean function
-// an error message that doesn't depend on the value
-
-// the key should be specified somewhere else?
 export function validateExists():Validator {
   return function(val) {
     return exists(val) || "missing"
@@ -186,7 +157,7 @@ export function validateInstanceOf(type:any):Validator {
 
 export function validateRegex(regex:RegExp):Validator {
   return function(val) {
-    return (val.match(regex)) || "did not match " + regex
+    return (regex.test(val)) || "did not match " + regex
   }
 }
 
@@ -194,15 +165,3 @@ function exists(value):boolean {
   return !(value === undefined || value === null)
 }
 
-//export type MemberOffer = {
-  //global_member_offer_uuid: GUID; --- Required, Custom Regex
-
-  //// 7 digit phone number with no punctuation
-  //account_number: PhoneNumber; --- Required, Custom Regex
-
-  //global_offer_id: ID; --- Required, check is a number (between x and y?)
-  //awarded_global_location_id: ID; --- check is a number (greater than 0)
-	//earned_date: Date; -- instanceof Date and exists
-	//start_date: ?Date; -- if it exists, it must be an instanceof Date
-	//expire_date: Date; -- 
-//}
