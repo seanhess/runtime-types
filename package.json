@@ -4,11 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "babel-node test/test.js",
+    "build": "node_modules/.bin/babel -d build/ src/ test/"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "esprima-fb": "15001.1.0-dev-harmony-fb"
+    "bluebird": "2.9.26",
+    "esprima-fb": "15001.1.0-dev-harmony-fb",
+    "lodash": "3.9.3"
+  },
+  "devDependencies": {
+    "babel": "5.4.7"
   }
 }
