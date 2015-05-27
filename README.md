@@ -191,6 +191,12 @@ API: validate
 
 Create a single validator.
 
+    type KeyedError = {
+      key: string;
+      value: string;
+      error: ValidationError;
+    }
+
     type ValidateObject = (value:Object) => Array<KeyedError>
 
     create(map:ValidatorMap, type:Type):ValidateObject;
@@ -218,12 +224,6 @@ Other Types
     // either true, or a string with the error
     // use === true to test
     type ValidationResult = boolean | ValidationError;
-
-    type KeyedError = {
-      key: string;
-      value: string;
-      error: ValidationError;
-    }
 
 Validation Map
 
