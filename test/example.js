@@ -75,3 +75,14 @@ console.log(validators.User({
   phone: "801-411-4399",
   created: 1432757991843 // was supposed to be date, not a timestamp
 }))
+
+// --------------------------------------------
+
+console.log(validators.Kiosk({
+  mac_address: "asdf",
+  global_location_id: 1,
+  settings: {
+    test: 1234,
+  },
+  stuffs: {message: "HI"}
+}))

@@ -276,6 +276,7 @@ var VALIDATORS_BY_TYPE:ValidatorMap = {
   "number"  : validateTypeOf("number"),
   "boolean" : validateTypeOf("boolean"),
   "Date"    : validateInstanceOf(Date),
+  "Object"  : validateExists(),
 }
 ```
 

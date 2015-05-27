@@ -1,6 +1,6 @@
 {
   "name": "runtime-types",
-  "version": "1.0.2",
+  "version": "1.0.6",
   "description": "Use flow type information at runtime. Useful for validations, mapping to an ORM, and more. ",
   "keywords": [
     "orm",
@@ -23,7 +23,7 @@
   "scripts": {
     "prepublish": "npm run build",
     "test": "babel-node test/example.js",
-    "build": "node_modules/.bin/babel -d build/ src/"
+    "build": "node_modules/.bin/babel --no-comments -d build/ src/"
   },
   "author": {
     "name": "Sean Hess",

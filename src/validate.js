@@ -52,6 +52,7 @@ var VALIDATORS_BY_TYPE:ValidatorMap = {
   "number"  : validateTypeOf("number"),
   "boolean" : validateTypeOf("boolean"),
   "Date"    : validateInstanceOf(Date),
+  "Object"  : validateExists(),
 }
 
 function validateAll(vs:Array<KeyedValidator>, obj:Object):Array<KeyedError> {
@@ -90,6 +91,25 @@ function propToValidator(map:ValidatorMap, prop:Property):KeyedValidator {
 // you want to allow them to override the mapping
 // especially for their custom types!
 function typeToValidator(map:ValidatorMap, key:string, type:Type):KeyedValidator {
+
+  // TODO nested objects
+  //if (type.properties) {
+
+    ////console.log("TWE", type.properties)
+    //var all = objToValidators(map, type.properties)
+
+    //function allThemBones(value) {
+      //var errs = validateAll(all, value)
+
+      //if (errs.length) {
+        //return "error there was some stuff: " + errs.length
+      //}
+
+      //return true
+    //}
+
+    //return [key, allThemBones]
+  //}
 
   // now run the type-based validator
   var validator = map[type.name]
