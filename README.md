@@ -210,7 +210,7 @@ Create a map of validation functions, with keys equal to the name of the types
 
     createAll(map:ValidatorMap, types:ObjectMap<Type>):ObjectMap<ValidateObject>;
 
-`Validators` are the functions that you use as building blocks. They return either `true` or an error message
+Validators are the functions that you use as building blocks. They return either `true` or an error message
 
     type Validator<T> = (value:T) => ValidationResult
 
@@ -228,7 +228,7 @@ Provided Validators:
     validateRegex(regex:RegExp):Validator;
 
 
-The `ValidationMap` connects types to validators
+The ValidationMap connects types to validators
 
     type ValidatorMap = {[key:string]:Validator}
 
