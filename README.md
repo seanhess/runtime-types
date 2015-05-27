@@ -11,7 +11,7 @@ Installation
 Runtime Example
 ---------------
 
-If this file is in ./types.js
+If this file is in ./example-types.js
 
     // @flow
     export type PhoneNumber = string;
@@ -148,3 +148,46 @@ Mapping to ORM Schemas
 ----------------------
 
 Coming soon. Will be similar to implementation of `validate.js`
+
+
+API: runtime-types
+------------------
+
+readFile
+
+    // read a file synchronously and return a type definition for each type alias found
+    // keys are the name of the alias
+    // values are the type description
+    // you should run this when your program starts
+
+    export function readFile(filepath:string):ObjectMap<Type>;
+
+Property and Type
+
+    export type Property = {
+      key: string;
+      type: Type;
+      optional?: boolean;
+    }
+
+    export type Type = {
+      name: string; // number, string, boolean, Post, User, Array
+
+      literal?: string; // for string literals
+
+      nullable?: boolean;
+
+      // only filled for object types
+      properties?: Array<Property>;
+
+      // only filled for generics, like Array<XX>
+      params?: Array<Type>;
+    }
+
+    export type ObjectMap<T> = {[key: string]: T}
+
+API: validate
+-------------
+
+
+

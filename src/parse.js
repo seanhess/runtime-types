@@ -14,8 +14,11 @@ import {Type, Property, ObjectMap} from './types'
 // fileTypes 
 
 
-// Synchronous. Designed to be called at program load on a particular file
-// or set of files
+// read a file synchronously and return a type definition for each type alias found
+// keys are the name of the alias
+// values are the type description
+// you should run this when your program starts
+
 export function readFile(filepath:string):ObjectMap<Type> {
   return findTypes(parseFile(filepath))
 }
