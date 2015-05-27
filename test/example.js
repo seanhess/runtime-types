@@ -2,7 +2,7 @@
 var path = require('path')
 var validate = require('../src/validate')
 import types from '../src'
-import {create, createAll, validateRegex, validateTypeOf} from '../src/validate'
+var {create, createAll, validateRegex, validateTypeOf} = types.validate
 import {ValidatorMap, Validator} from '../src/validate'
 import {PhoneNumber, User} from './example-types'
 

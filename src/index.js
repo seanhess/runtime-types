@@ -1,9 +1,6 @@
 // @flow
 import {readFile} from './parse'
 import {Type, Property} from './types'
+import * as validate from './validate'
 
-export default {readFile, Type, Property}
-
-// import validators separately
-// var validate = require('runtime-types/validate')
-// var types = require('runtime-types')
+export default {readFile, Type, Property, validate}

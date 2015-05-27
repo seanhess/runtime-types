@@ -57,15 +57,15 @@ You can use the object provided by `readFile` to create validators for your type
 
 ```js
 var types = require('runtime-types')
-var validate = require('runtime-types/validate')
+var validate = require('runtime-types').validate
 
 var MyTypes = types.readFile(path.join(__dirname, '../test/example-types.js'))
 
-var VALIDATORS:ValidatorMap = {
+var VALIDATORS = {
   PhoneNumber: validate.validateRegex(/^\d{10}$/),
 }
 
-var validators = createAll(VALIDATORS, MyTypes)
+var validators = validate.createAll(VALIDATORS, MyTypes)
 ```
 
 Then you can check various objects to make sure they match `User` at runtime.
@@ -127,7 +127,7 @@ var VALIDATORS:ValidatorMap = {
   PhoneNumber: validate.validateRegex(/^\d{10}$/),
 }
 
-var validators = createAll(VALIDATORS, MyTypes)
+var validators = validate.createAll(VALIDATORS, MyTypes)
 
 var errs = validators.User({
   username: "bobby",
@@ -160,7 +160,7 @@ It does not try to guess validators for your type aliases. If you forget to prov
 ```js
 var VALIDATORS:ValidatorMap = {}
 
-var validators = createAll(VALIDATORS, MyTypes)
+var validators = validate.createAll(VALIDATORS, MyTypes)
 
 // Error: Could not find validator for type: PhoneNumber
 ```

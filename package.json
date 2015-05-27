@@ -1,13 +1,23 @@
 {
   "name": "runtime-types",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Use flow type information at runtime. Useful for validations, mapping to an ORM, and more. ",
-  "keywords": ["orm", "flow", "type", "static types", "runtime", "validate", "validation", "object", "valid", "typecheck"],
+  "keywords": [
+    "orm",
+    "flow",
+    "type",
+    "static types",
+    "runtime",
+    "validate",
+    "validation",
+    "object",
+    "valid",
+    "typecheck"
+  ],
   "main": "build/index.js",
-  "files": ["./src/validate.js"],
-  "repository" : {
-    "type" : "git",
-    "url" : "https://github.com/seanhess/runtime-types.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seanhess/runtime-types.git"
   },
   "homepage": "https://github.com/seanhess/runtime-types",
   "scripts": {
@@ -15,7 +25,10 @@
     "test": "babel-node test/example.js",
     "build": "node_modules/.bin/babel -d build/ src/"
   },
-  "author": "Sean Hess",
+  "author": {
+    "name": "Sean Hess",
+    "url":  "http://seanhess.github.io"
+  },
   "license": "MIT",
   "dependencies": {
     "esprima-fb": "15001.1.0-dev-harmony-fb",
