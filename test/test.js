@@ -1,22 +1,29 @@
 // @flow
 var path = require('path')
 import {fileTypes} from '../src/parse'
-import {validators, validateAll, ValidationError, validateTypeOf} from '../src/validate'
+import {validators, validateAll, ValidationError, validateTypeOf, ValidatorMap, Validator} from '../src/validate'
 
 
-var VALIDATORS = {
-  GUID: validateGUID,
-  PhoneNumber: validatePhoneNumber,
+var VALIDATORS:ValidatorMap = {
+  GUID: validateGUID(),
+  PhoneNumber: validatePhoneNumber(),
   ID: validateTypeOf('number')
 }
 
-function validateGUID(guid):?ValidationError {
-  return undefined
+function validateGUID():Validator {
+  return function(guid) {
+    return true
+  }
 }
 
-function validatePhoneNumber(phone:PhoneNumber):?ValidationError {
-  if (phone.length != 9) {
-    return "invalid phone number: " + phone
+// TODO: composable validation functions!
+// some way to compose 1 or more of them?
+function validatePhoneNumber():Validator {
+  return function(phone:PhoneNumber) {
+    if (phone.length != 9) {
+      return "invalid phone number: " + phone
+    }
+    return true
   }
 }
 
@@ -39,7 +46,7 @@ export type MemberOffer = {
 
 var sample:MemberOffer = {
   global_member_offer_uuid: "asdf",
-  account_number: "142356789",
+  account_number: "14235679",
   global_offer_id: 1234,
   awarded_global_location_id: 2134,
   earned_date: new Date(),
@@ -54,7 +61,7 @@ var types = fileTypes(path.join(__dirname, '..', 'test', 'test.js'))
 
 console.log("TYPES", types.MemberOffer)
 var vs = validators(VALIDATORS, types.MemberOffer)
-console.log("vs", vs)
+//console.log("vs", vs)
 var errs = validateAll(vs, sample)
 console.log("ERRS", errs)
 //console.log("TYPES", types.User.properties)

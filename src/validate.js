@@ -1,10 +1,20 @@
 // @flow
 import {Type, Property} from './parse'
-import {flatten, extend} from 'lodash'
+import {flatten, extend, constant, find} from 'lodash'
 
+export type Validator<T> = (value:T) => ValidationResult
 export type ValidationError = string;
-export type Validator<T> = (value:T) => ?ValidationError;
+// either true, or a string with the error
+// use === true to test
+export type ValidationResult = boolean | ValidationError;
+
 export type ValidatorMap = {[key:string]:Validator}
+
+export type KeyedError = {
+  key: string;
+  error: ValidationError;
+}
+
 type KeyedValidator = [string, Validator];
 
 //export type Property = {
@@ -28,25 +38,53 @@ var VALIDATORS_BY_TYPE:ValidatorMap = {
   "Date"    : validateInstanceOf(Date),
 }
 
-export function validateAll(vs:Array<KeyedValidator>, obj:Object):Array<ValidationError> {
-  var maybeErrs:Array<any> = vs.map(function(kv) {
+export function validateAll(vs:Array<KeyedValidator>, obj:Object):Array<KeyedError> {
+  var maybeErrs:Array<?KeyedError> = vs.map(function(kv) {
     return validate(kv, obj)
   })
 
-  var errs:Array<ValidationError> = maybeErrs.filter(function(err:?ValidationError):boolean {
-    return !!err
+  var errs:any = maybeErrs.filter(function(err:?KeyedError):boolean {
+    return (err !== undefined)
   })
 
   return errs
 }
 
-export function validate([key, validator]:KeyedValidator, obj:Object):?ValidationError {
-  var err = validator(obj[key])
-  if (err) {
-    err = key + ": " + err
+export function validate([key, validator]:KeyedValidator, obj:Object):?KeyedError {
+  // this runs the validator
+  var result = validator(obj[key])
+  if (!valid(result)) {
+    return {key: key, error: (result : any)}
   }
-  return err
 }
+
+export function valid(result:ValidationResult):boolean {
+  return result === true
+}
+
+
+//export function combine(vs:Array<Validator>):Validator {
+  //// return a function that evaluates all of them
+  //return function(val) {
+    //// run all of them, and return the message for the first one that fails
+    //var failed = vs.map(function(validator) {
+      //return validator(val) !== true
+    //})
+
+    //if (failed) {
+      //return {
+        //valid: false,
+        //message: failed.message
+      //}
+    //}
+
+    //else {
+      //return {
+        //valid: true
+      //}
+    //}
+  //}
+//}
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -69,25 +107,21 @@ function typeToValidator(map:ValidatorMap, key:string, type:Type):KeyedValidator
   }
 
   function isValid(value) {
-    // check to see if it exists
-    // if nullable, then run only validator
-    // if NOT nullable, then run both 
-
-    // not allowed to be null. Both must be true
-    if (!type.nullable) {
-      var err = validateExists(value)
-      if (err) {
-        return err
+    if (!exists(value)) {
+      // if the property doesn't exist, and it's not a nullable property
+      // otherwise just do the second one
+      if (type.nullable) {
+        return true
       }
+
       else {
-        return validator(value)
+        return "missing"
       }
     }
-    // it IS nullable, only check to see if it is valid if it exists
-    else if (!missing(value)){
+
+    else {
       return validator(value)
     }
-
   }
 
   return [key, isValid]
@@ -104,12 +138,16 @@ export function validators(map:ValidatorMap, type:Type):Array<KeyedValidator> {
   }
 }
 
+
 function objToValidators(map:ValidatorMap, props:Array<Property>):Array<KeyedValidator> {
   return props.map(function(prop) {
     return propToValidator(map, prop)
   })
 }
 
+// I need a way to compose validators...
+// all   -> runs all validators
+// first -> runs them in order, stopping after the first
 
 //////////////////////////////////////////////////////////////
 // Validators
@@ -124,41 +162,36 @@ function objToValidators(map:ValidatorMap, props:Array<Property>):Array<KeyedVal
 // like, a validator doesn't have to add the key stuff.
 // it's the same in every single one!
 
+// RULES: should leverage a simple boolean function
+// an error message that doesn't depend on the value
+
 // the key should be specified somewhere else?
-export function validateExists(value:?any):?ValidationError {
-  if (missing(value)) {
-    return "missing"
+export function validateExists():Validator {
+  return function(val) {
+    return exists(val) || "missing"
   }
 }
 
-// string, number, boolean
 export function validateTypeOf(type:string):Validator {
-  return function(value:any) {
-    var tof = typeof value
-    if (tof !== type) {
-      return "expected " + type + " but found " + tof
-    }
+  return function(val) {
+    return (typeof val === type) || "expected typeof " + type
   }
 }
 
 export function validateInstanceOf(type:any):Validator {
-  return function(value:any) {
-    if (!(value instanceof type)) {
-      return "expected " + type + " but was not instance"
-    }
+  return function(val) {
+    return (val instanceof type) || "expected instance of " + type
   }
 }
 
 export function validateRegex(regex:RegExp):Validator {
-  return function(value:string) {
-    if (!value.match(regex)) {
-      return "could not match " + value + " against " + regex
-    }
+  return function(val) {
+    return (val.match(regex)) || "did not match " + regex
   }
 }
 
-function missing(value):boolean {
-  return (value === undefined || value === null)
+function exists(value):boolean {
+  return !(value === undefined || value === null)
 }
 
 //export type MemberOffer = {
