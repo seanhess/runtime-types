@@ -55,16 +55,18 @@ Validation Example
 
 You can use the object provided by `readFile` to create validators for your types
 
-    var types = require('runtime-types')
-    var validate = require('runtime-types/validate')
+```js
+var types = require('runtime-types')
+var validate = require('runtime-types/validate')
 
-    var MyTypes = types.readFile(path.join(__dirname, '../test/example-types.js'))
+var MyTypes = types.readFile(path.join(__dirname, '../test/example-types.js'))
 
-    var VALIDATORS:ValidatorMap = {
-      PhoneNumber: validate.validateRegex(/^\d{10}$/),
-    }
+var VALIDATORS:ValidatorMap = {
+  PhoneNumber: validate.validateRegex(/^\d{10}$/),
+}
 
-    var validators = createAll(VALIDATORS, MyTypes)
+var validators = createAll(VALIDATORS, MyTypes)
+```
 
 Then you can check various objects to make sure they match `User` at runtime.
 
