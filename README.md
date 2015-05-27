@@ -202,13 +202,20 @@ This library returns `ValidateObject` functions: they accept an object and retur
 
     type ValidateObject = (value:Object) => Array<KeyedError>
 
-Create a single validator.
+Create a single validate function
 
     create(map:ValidatorMap, type:Type):ValidateObject;
 
-Create a map of validators, with keys equal to the name of the types
+Create a map of validation functions, with keys equal to the name of the types
 
     createAll(map:ValidatorMap, types:ObjectMap<Type>):ObjectMap<ValidateObject>;
+
+`Validators` are the functions that you use as building blocks. They return either `true` or an error message
+
+    type Validator<T> = (value:T) => ValidationResult
+
+    // use === true to test
+    type ValidationResult = boolean | ValidationError;
 
 Provided Validators:
 
@@ -220,16 +227,8 @@ Provided Validators:
 
     validateRegex(regex:RegExp):Validator;
 
-Other Types
 
-    type Validator<T> = (value:T) => ValidationResult
-
-
-    // either true, or a string with the error
-    // use === true to test
-    type ValidationResult = boolean | ValidationError;
-
-Validation Map
+The `ValidationMap` connects types to validators
 
     type ValidatorMap = {[key:string]:Validator}
 
