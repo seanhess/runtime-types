@@ -26,6 +26,9 @@ type KeyedValidator = [string, Validator];
 
 // -------------------------------------------------------------
 
+// create a single validator: a function to call with your object
+// it will return an array of errors
+
 export function create(map:ValidatorMap, type:Type):ValidateObject {
   var vs = typeValidators(map, type)
   return function(obj) {

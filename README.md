@@ -160,17 +160,17 @@ readFile. See [example](#runtime-example)
     // values are the type description
     // you should run this when your program starts
 
-    export function readFile(filepath:string):ObjectMap<Type>;
+    readFile(filepath:string):ObjectMap<Type>;
 
 Property and Type
 
-    export type Property = {
+    type Property = {
       key: string;
       type: Type;
       optional?: boolean;
     }
 
-    export type Type = {
+    type Type = {
       name: string; // number, string, boolean, Post, User, Array
 
       literal?: string; // for string literals
@@ -189,5 +189,52 @@ Property and Type
 API: validate
 -------------
 
+Create a single validator.
 
+    type ValidateObject = (value:Object) => Array<KeyedError>
+
+    create(map:ValidatorMap, type:Type):ValidateObject;
+
+Create a map of validators, with keys equal to the name of the types
+
+    createAll(map:ValidatorMap, types:ObjectMap<Type>):ObjectMap<ValidateObject>;
+
+Provided Validators:
+
+    validateExists():Validator;
+
+    validateTypeOf(type:string):Validator;
+
+    validateInstanceOf(type:any):Validator;
+
+    validateRegex(regex:RegExp):Validator;
+
+Other Types
+
+    type Validator<T> = (value:T) => ValidationResult
+
+    type ValidationError = string;
+
+    // either true, or a string with the error
+    // use === true to test
+    type ValidationResult = boolean | ValidationError;
+
+    type KeyedError = {
+      key: string;
+      value: string;
+      error: ValidationError;
+    }
+
+Validation Map
+
+    type ValidatorMap = {[key:string]:Validator}
+
+    // the default validation map, override by passing to `create`
+
+    var VALIDATORS_BY_TYPE:ValidatorMap = {
+      "string"  : validateTypeOf("string"),
+      "number"  : validateTypeOf("number"),
+      "boolean" : validateTypeOf("boolean"),
+      "Date"    : validateInstanceOf(Date),
+    }
 
