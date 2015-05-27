@@ -13,6 +13,7 @@ Runtime Example
 
 If this file is in ./example-types.js
 
+    ```js
     // @flow
     export type PhoneNumber = string;
 
@@ -22,10 +23,13 @@ If this file is in ./example-types.js
       phone: PhoneNumber;
       created: ?Date;
     }
+    ```
 
 You can import the type information as follows:
 
+    ```js
     var types = require('runtime-types')
+    var path  = require('path')
 
     // read the file into a runtime type description
     var MyTypes = types.readFile(path.join(__dirname, '../test/example-types.js'))
@@ -44,6 +48,7 @@ You can import the type information as follows:
         ]
       }
     }
+    ```
 
 Validation Example
 ------------------
