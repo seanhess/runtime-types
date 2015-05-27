@@ -153,13 +153,12 @@ Coming soon. Will be similar to implementation of `validate.js`
 API: runtime-types
 ------------------
 
-readFile
+readFile. See [example](#runtime-example)
 
     // read a file synchronously and return a type definition for each type alias found
     // keys are the name of the alias
     // values are the type description
     // you should run this when your program starts
-    // see <a href="http://google.com">woot</a>
 
     export function readFile(filepath:string):ObjectMap<Type>;
 
