@@ -189,7 +189,10 @@ Property and Type
 API: validate
 -------------
 
-Create a single validator.
+
+This library returns `ValidateObject` functions: they accept an object and return an array of errors
+
+    type ValidationError = string;
 
     type KeyedError = {
       key: string;
@@ -198,6 +201,8 @@ Create a single validator.
     }
 
     type ValidateObject = (value:Object) => Array<KeyedError>
+
+Create a single validator.
 
     create(map:ValidatorMap, type:Type):ValidateObject;
 
@@ -219,7 +224,6 @@ Other Types
 
     type Validator<T> = (value:T) => ValidationResult
 
-    type ValidationError = string;
 
     // either true, or a string with the error
     // use === true to test
