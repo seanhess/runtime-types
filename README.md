@@ -1,7 +1,7 @@
 runtime-types
 =============
 
-Use flow type information at runtime. Useful for validations, mapping to an ORM, and more.
+Use flow type information at runtime. Automatically generate validation code, ORM schemas, etc from the type definition.
 
 Installation
 ------------
@@ -38,15 +38,15 @@ You can import the type information as follows:
         name: 'Object',
         properties: [
           { key: 'username', type: { name: 'string' } },
-          { key: 'age', type: { name: 'number' } },
-          { key: 'phone', type: { name: 'PhoneNumber' } },
-          { key: 'created', type: { name: 'Date', nullable: true } } 
+          { key: 'age',      type: { name: 'number' } },
+          { key: 'phone',    type: { name: 'PhoneNumber' } },
+          { key: 'created',  type: { name: 'Date', nullable: true } } 
         ]
       }
     }
 
-Validation
-----------
+Validation Example
+------------------
 
 You can use this description to create validators for your types
 
@@ -61,7 +61,7 @@ You can use this description to create validators for your types
 
     var validators = createAll(VALIDATORS, MyTypes)
 
-Then you can check various objects for errors
+Then you can check various objects to make sure they match `User` at runtime.
 
     var errs = validators.User({
       username: "bobby",
@@ -72,7 +72,7 @@ Then you can check various objects for errors
 
     // ==> []
 
-Checks if fields are all set
+Checks if fields are set
 
     var errs = validators.User({
       age: 23,
@@ -80,8 +80,9 @@ Checks if fields are all set
     })
 
     // ==> [ { key: 'username', value: undefined, error: 'missing' } ]
+    // no error for created because it is nullable
 
-Checks correct typeof
+Checks correct typeof for `string`, `number` and `boolean`
 
     var errs = validators.User({
       username: "bobby",
@@ -91,7 +92,7 @@ Checks correct typeof
 
     // ==> [ { key: 'age', value: 'not an age', error: 'expected typeof number' } ]
 
-Checks instances
+Checks instances for `Date`
 
     var errs = validators.User({
       username: "bobby",
@@ -100,15 +101,17 @@ Checks instances
       created: 1432757991843 // was supposed to be date, not a timestamp
     })
 
-    // ==> [ { key: 'created',
-    //  value: 1432757991843,
-    //  error: 'expected instance of function Date() { [native code] }' } ]
+    // [ { key: 'created',
+    //     value: 1432757991843,
+    //     error: 'expected instance of function Date() { [native code] }' } ]
 
 Provided Validators: regex
 
     var VALIDATORS:ValidatorMap = {
       PhoneNumber: validate.validateRegex(/^\d{10}$/),
     }
+
+    var validators = createAll(VALIDATORS, MyTypes)
 
     var errs = validators.User({
       username: "bobby",
@@ -137,7 +140,7 @@ It does not try to guess validators for your type aliases. If you forget to prov
 
     var VALIDATORS:ValidatorMap = {}
 
-    var validators = createAll(Validators, MyTypes)
+    var validators = createAll(VALIDATORS, MyTypes)
 
     // Error: Could not find validator for type: PhoneNumber
 
