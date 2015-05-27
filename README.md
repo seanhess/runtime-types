@@ -189,6 +189,8 @@ Property and Type
 API: validate
 -------------
 
+See the [example](#validation-example)
+
 
 This library returns `ValidateObject` functions: they accept an object and return an array of errors
 
