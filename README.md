@@ -48,7 +48,7 @@ You can import the type information as follows:
 Validation Example
 ------------------
 
-You can use this description to create validators for your types
+You can use the object provided by `readFile` to create validators for your types
 
     var types = require('runtime-types')
     var validate = require('runtime-types/validate')
@@ -190,7 +190,6 @@ API: validate
 -------------
 
 See the [example](#validation-example)
-
 
 This library returns `ValidateObject` functions: they accept an object and return an array of errors
 
