@@ -144,3 +144,7 @@ It does not try to guess validators for your type aliases. If you forget to prov
 
     // Error: Could not find validator for type: PhoneNumber
 
+Mapping to ORM Schemas
+----------------------
+
+Coming soon. Will be similar to implementation of `validate.js`
