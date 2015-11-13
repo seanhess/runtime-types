@@ -180,7 +180,7 @@ export function validateInstanceOf(func:Function):Validator {
 
 export function validateRegex(regex:RegExp):Validator {
   return function(val) {
-    return (regex.test(val)) || "did not match " + regex
+    return (regex.test(val)) || "did not match " + regex.toString()
   }
 }
 
