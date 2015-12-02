@@ -31,10 +31,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "esprima-fb": "15001.1.0-dev-harmony-fb",
-    "lodash": "3.9.3"
+    "esprima-fb": "15001.1001.0-dev-harmony-fb",
+    "lodash": "3.10.1"
   },
   "devDependencies": {
-    "babel": "5.4.7"
+    "babel": "5.x"
   }
 }
