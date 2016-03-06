@@ -2,7 +2,7 @@
 
 // TODO FEATURE support nested objects
 
-import {Type, Property, ObjectMap} from './types'
+import type {Type, Property, ObjectMap} from './types'
 import {flatten, extend, constant, find} from 'lodash'
 
 export type Validator<T> = (value:T) => ValidationResult

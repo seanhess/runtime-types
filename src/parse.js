@@ -7,7 +7,7 @@ var lodash = require('lodash')
 var {assign, curry} = lodash
 var fs = require('fs')
 
-import {Type, Property, ObjectMap} from './types'
+import type {Type, Property, ObjectMap} from './types'
 
 
 //////////////////////////////////////////////////////////////

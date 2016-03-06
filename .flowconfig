@@ -1,5 +1,6 @@
 [ignore]
 .*build/.*
+.*node_modules/babel.*
 
 [include]
 
