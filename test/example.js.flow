@@ -1,5 +1,5 @@
 // @flow
-export type PhoneNumber = string;
+export type PhoneNumber = string
 
 export type User = {
   username: string;
@@ -16,3 +16,8 @@ export type Kiosk = {
     message: string;
   }
 }
+
+// Flow 0.19 syntax, should be automatically stripped from file as not to
+// confuse esprima.
+declare export var aNum: number
+declare export var aFunc: Function

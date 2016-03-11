@@ -11,7 +11,7 @@ import type {Type, Property, ObjectMap} from './types'
 
 
 //////////////////////////////////////////////////////////////
-// fileTypes 
+// fileTypes
 
 
 // read a file synchronously and return a type definition for each type alias found
@@ -24,7 +24,10 @@ export function readFile(filepath:string):ObjectMap<Type> {
 }
 
 function parseFile(filepath:string):Tree {
-  var data = fs.readFileSync(filepath)
+  var data = fs.readFileSync(filepath).toString()
+  // Strip 'declare export' statements from Flow 0.19, which aren't supported by esprima.
+  // They're not useful to us anyway.
+  data = data.replace(/declare export .*?(?:\n|$)/ig, '')
   return esprima.parse(data.toString(), {tolerant:true})
 }
 
