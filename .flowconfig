@@ -1,5 +1,7 @@
 [ignore]
 .*build/.*
+.*node_modules/babel.*
+.*node_modules/y18n.*
 
 [include]
 

@@ -1,10 +1,10 @@
 // @flow
 var path = require('path')
 var validate = require('../src/validate')
-import types from '../src'
+import * as types from '../src'
 var {create, createAll, validateRegex, validateTypeOf} = types.validate
-import {ValidatorMap, Validator} from '../src/validate'
-import {PhoneNumber, User} from './example-types'
+import type {ValidatorMap, Validator} from '../src/validate';
+import type {PhoneNumber, User} from './example-types'
 
 var VALIDATORS:ValidatorMap = {
   PhoneNumber: validateRegex(/^\d{10}$/),
