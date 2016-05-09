@@ -33,7 +33,7 @@ function parseFile(filepath:string):Tree {
 
 function findTypes(tree:Tree):ObjectMap<Type> {
   //console.log("DATA", tree.body)
-  var aliases:Array<?TypeAlias> = tree.body.map(function(s:AnySyntax) {
+  var aliases:Array<?TypeAlias> = tree.body.map(function(s:$Subtype<AnySyntax>) {
 
     if (s.type == "ExportDeclaration") {
       var ex:ExportDeclaration = (s : any)
