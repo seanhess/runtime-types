@@ -267,6 +267,11 @@ type GenericTypeAnnotation = {
   typeParameters: ?TypeParameters;
 }
 
+type UnionTypeAnnotation = {
+  type: "UnionTypeAnnotation";
+  types: TypeAnnotation[];
+}
+
 //////////////////////////////////////////////////////////////////
 
 type SyntaxTokens = {
