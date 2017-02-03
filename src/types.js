@@ -20,4 +20,7 @@ export type Type = {
 
   // only filled for generics, like Array<XX>
   params?: Array<Type>;
+
+  // only filled for union types
+  types?: Array<Type>;
 }
