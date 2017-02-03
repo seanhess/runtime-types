@@ -236,7 +236,7 @@ type Identifier = {
 // annotations
 
 // use an intersection type so I don't have to cast later
-type TypeAnnotation = ObjectTypeAnnotation | ValueTypeAnnotation | GenericTypeAnnotation | WrapperTypeAnnotation | StringLiteralTypeAnnotation;
+type TypeAnnotation = ObjectTypeAnnotation | ValueTypeAnnotation | GenericTypeAnnotation | WrapperTypeAnnotation | StringLiteralTypeAnnotation | UnionTypeAnnotation;
 
 type ValueTypeAnnotation = {
   type: string; // StringTypeAnnotation, NumberTypeAnnotation
