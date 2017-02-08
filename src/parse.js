@@ -84,6 +84,10 @@ function toType(anno:TypeAnnotation):Type {
     return literalType((anno : any))
   }
 
+  else if (anno.type === Syntax.UnionTypeAnnotation) {
+    return unionType((anno : any))
+  }
+
   else {
     return valueType(anno)
   }
@@ -118,6 +122,12 @@ function literalType(anno:StringLiteralTypeAnnotation):Type {
   return type
 }
 
+function unionType(anno:UnionTypeAnnotation):Type {
+  var type = (emptyType('Union') : any)
+  type.types = anno.types.map(toType)
+  return type
+}
+
 //VoidTypeAnnotation
 //StringTypeAnnotation
 //BooleanTypeAnnotation
@@ -125,11 +135,11 @@ function literalType(anno:StringLiteralTypeAnnotation):Type {
 //FunctionTypeAnnotation
 //StringLiteralTypeAnnotation
 //AnyTypeAnnotation
+//UnionTypeAnnotation
 
 // UNSUPPORTED
 //ArrayTypeAnnotation (it uses GenericTypeAnnotation)
 //IntersectionTypeAnnotation
-//UnionTypeAnnotation
 //TupleTypeAnnotation
 //TypeAnnotation
 //TypeofTypeAnnotation
@@ -226,7 +236,7 @@ type Identifier = {
 // annotations
 
 // use an intersection type so I don't have to cast later
-type TypeAnnotation = ObjectTypeAnnotation | ValueTypeAnnotation | GenericTypeAnnotation | WrapperTypeAnnotation | StringLiteralTypeAnnotation;
+type TypeAnnotation = ObjectTypeAnnotation | ValueTypeAnnotation | GenericTypeAnnotation | WrapperTypeAnnotation | StringLiteralTypeAnnotation | UnionTypeAnnotation;
 
 type ValueTypeAnnotation = {
   type: string; // StringTypeAnnotation, NumberTypeAnnotation
@@ -255,6 +265,11 @@ type GenericTypeAnnotation = {
   type: string; // "GenericTypeAnnotation";
   id: Identifier;
   typeParameters: ?TypeParameters;
+}
+
+type UnionTypeAnnotation = {
+  type: "UnionTypeAnnotation";
+  types: TypeAnnotation[];
 }
 
 //////////////////////////////////////////////////////////////////
